@@ -1,9 +1,7 @@
-RSpec.describe SidekiqHerokuScaler do
-  it "has a version number" do
-    expect(SidekiqHerokuScaler::VERSION).not_to be nil
-  end
+# frozen_string_literal: true
 
-  it "does something useful" do
-    expect(false).to eq(true)
+RSpec.describe SidekiqHerokuScaler do
+  it 'has a version number' do
+    expect(SidekiqHerokuScaler::VERSION).not_to be_nil
   end
 end

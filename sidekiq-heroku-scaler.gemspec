@@ -1,23 +1,22 @@
+# frozen_string_literal: true
 
-lib = File.expand_path("../lib", __FILE__)
+lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require "sidekiq_heroku_scaler/version"
+require 'sidekiq-heroku-scaler/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "sidekiq_heroku_scaler"
+  spec.name          = 'sidekiq-heroku-scaler'
   spec.version       = SidekiqHerokuScaler::VERSION
-  spec.authors       = ["Vital Ryabchinskiy"]
-  spec.email         = ["vital.ryabchinskiy@gmail.com"]
+  spec.authors       = ['Vital Ryabchinskiy']
+  spec.email         = ['vital.ryabchinskiy@gmail.com']
 
   spec.summary       = 'Sidekiq Heroku Scaler'
   spec.description   = 'Tool to scale sidekiq instances on Heroku'
   spec.homepage      = 'https://github.com/vitalinfo/sidekiq-heroku-scaler'
   spec.license       = 'MIT'
 
-  # Specify which files should be added to the gem when it is released.
-  # The `git ls-files -z` loads the files in the RubyGem that have been added into git.
-  spec.files = Dir.chdir(File.expand_path(__dir__)) do
-    `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
+  spec.files         = `git ls-files -z`.split("\x0").reject do |f|
+    f.match(%r{^(test|spec|features)/})
   end
   spec.bindir        = 'exe'
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
@@ -29,4 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rubocop'
 
   spec.add_dependency 'platform-api'
+  spec.add_dependency 'sidekiq'
 end

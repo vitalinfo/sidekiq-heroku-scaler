@@ -24,26 +24,26 @@ Or install it yourself as:
 
 Create strategy instance (gem strategy based on latency):
 ```
-	scale_strategy = SidekiqHerokuScaler::Strategy::Latency.new(
-	  min_dynos_count: 1,
-	  max_dynos_count: 10,
-	  max_latency: 5.minutes.to_i,
-	  min_latency: 1.minute.to_i
-	)
+scale_strategy = SidekiqHerokuScaler::Strategy::Latency.new(
+  min_dynos_count: 1,
+  max_dynos_count: 10,
+  max_latency: 5.minutes.to_i,
+  min_latency: 1.minute.to_i
+)
 ```
 or
 
 define your own strategy:
 ```
-	class CustomStrategy
-		def increase?(sidekiq_worker)
-			# TODO
-		end 
-		
-		def decrease?(sidekiq_worker)
-			# TODO
-		end
+class CustomStrategy
+	def increase?(sidekiq_worker)
+		# TODO
+	end 
+	
+	def decrease?(sidekiq_worker)
+		# TODO
 	end
+end
 ```
 
 methods `increase?/decrease?` are required, these methods provide logic does it need to add/remove sidekiq instance.
@@ -52,12 +52,12 @@ methods `increase?/decrease?` are required, these methods provide logic does it 
 
 To run iteration
 ```
-	SidekiqHerokuScaler::Manager.new(
-	  heroku_app_name: HEROKU_APP_NAME,
-	  heroku_token: HEROKU_TOKEN,
-	  strategy: scale_strategy,
-	  workers: SIDEKIQ_AUTOSCALE_WORKERS
-	).perform
+SidekiqHerokuScaler::Manager.new(
+  heroku_app_name: HEROKU_APP_NAME,
+  heroku_token: HEROKU_TOKEN,
+  strategy: scale_strategy,
+  workers: SIDEKIQ_AUTOSCALE_WORKERS
+).perform
 ```
 
 where:
@@ -82,21 +82,21 @@ sidekiq_autoscale:
 
 ###### `Scheduling::SidekiqAutoscaleWorker`
 ```
-	module Scheduling
-	  class SidekiqAutoscaleWorker
-	    include Sidekiq::Worker
-	
-	    sidekiq_options retry: false
-	
-	    def perform
-	      SidekiqHerokuScaler::Manager.new(
-	        heroku_app_name: ENV['HEROKU_APP_NAME'],
-	        heroku_token: ENV['HEROKU_TOKEN'],
-	        strategy: scale_strategy,
-	        workers: %w[worker]
-	      ).perform
-	    end
-	end    
+module Scheduling
+  class SidekiqAutoscaleWorker
+    include Sidekiq::Worker
+
+    sidekiq_options retry: false
+
+    def perform
+      SidekiqHerokuScaler::Manager.new(
+        heroku_app_name: ENV['HEROKU_APP_NAME'],
+        heroku_token: ENV['HEROKU_TOKEN'],
+        strategy: scale_strategy,
+        workers: %w[worker]
+      ).perform
+    end
+end    
 ```
 ## License
 

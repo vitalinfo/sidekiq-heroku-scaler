@@ -13,3 +13,4 @@
 .idea
 .ruby-gemset
 .ruby-version
+*.gem

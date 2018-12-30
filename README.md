@@ -36,13 +36,13 @@ or
 define your own strategy:
 ```
 class CustomStrategy
-	def increase?(sidekiq_worker)
-		# TODO
-	end 
+  def increase?(sidekiq_worker)
+    # TODO
+  end 
 	
-	def decrease?(sidekiq_worker)
-		# TODO
-	end
+  def decrease?(sidekiq_worker)
+    # TODO
+  end
 end
 ```
 

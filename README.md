@@ -46,7 +46,7 @@ class CustomStrategy
 end
 ```
 
-methods `increase?/decrease?` are required, these methods provide logic does it need to add/remove sidekiq instance.
+methods `increase?/decrease?` are required, these methods provide logic to handle additing or removing sidekiq instance.
 
 ### Manager
 

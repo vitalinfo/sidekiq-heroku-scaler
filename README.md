@@ -102,6 +102,7 @@ end
 ## TODO
 
 - Lack of specs
+- More documentation
 
 ## License
 

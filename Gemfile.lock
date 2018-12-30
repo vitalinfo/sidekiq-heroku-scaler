@@ -2,8 +2,8 @@ PATH
   remote: .
   specs:
     sidekiq-heroku-scaler (0.1.0)
-      platform-api
-      sidekiq
+      platform-api (~> 2.2)
+      sidekiq (~> 5.2)
 
 GEM
   remote: https://rubygems.org/

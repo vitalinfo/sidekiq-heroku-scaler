@@ -1,8 +1,6 @@
 # SidekiqHerokuScaler
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/sidekiq_heroku_scaler`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Tool to autoscale sidekiq dynos on Heroku. 
 
 ## Installation
 
@@ -22,22 +20,84 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+### Strategy
 
-## Development
+Create strategy instance (gem strategy based on latency):
+```
+	scale_strategy = SidekiqHerokuScaler::Strategy::Latency.new(
+	  min_dynos_count: 1,
+	  max_dynos_count: 10,
+	  max_latency: 5.minutes.to_i,
+	  min_latency: 1.minute.to_i
+	)
+```
+or
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+define your own strategy:
+```
+	class CustomStrategy
+		def increase?(sidekiq_worker)
+			# TODO
+		end 
+		
+		def decrease?(sidekiq_worker)
+			# TODO
+		end
+	end
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+methods `increase?/decrease?` are required, these methods provide logic does it need to add/remove sidekiq instance.
 
-## Contributing
+### Manager
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/sidekiq_heroku_scaler. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+To run iteration
+```
+	SidekiqHerokuScaler::Manager.new(
+	  heroku_app_name: HEROKU_APP_NAME,
+	  heroku_token: HEROKU_TOKEN,
+	  strategy: scale_strategy,
+	  workers: SIDEKIQ_AUTOSCALE_WORKERS
+	).perform
+```
 
+where:
+- `HEROKU_APP_NAME` - Heroku app name
+- `HEROKU_TOKEN` - Heroku token
+- `strategy` - scale strategy
+- `workers` - array of sidekiq worker names that could be scaled
+
+### Recurring
+
+1) Implement rake task and use [Heroku Scheduler](https://devcenter.heroku.com/articles/scheduler)
+2) To more frequently run use [Sidekiq Scheduler](https://github.com/moove-it/sidekiq-scheduler)
+
+###### `config/sidekiq_scheduler.yml`
+```
+sidekiq_autoscale:
+  cron: '0 */5 * * * *'
+  class: Scheduling::SidekiqAutoscaleWorker
+  queue: autoscale
+  description: 'This job autoscale sidekiq Heroku dynos'
+```
+
+###### `Scheduling::SidekiqAutoscaleWorker`
+```
+	module Scheduling
+	  class SidekiqAutoscaleWorker
+	    include Sidekiq::Worker
+	
+	    sidekiq_options retry: false
+	
+	    def perform
+	      SidekiqHerokuScaler::Manager.new(
+	        heroku_app_name: ENV['HEROKU_APP_NAME'],
+	        heroku_token: ENV['HEROKU_TOKEN'],
+	        strategy: scale_strategy,
+	        workers: %w[worker]
+	      ).perform
+	    end
+	end    
+```
 ## License
 
 The gem is available as open source under the terms of the [MIT License](https://opensource.org/licenses/MIT).
-
-## Code of Conduct
-
-Everyone interacting in the SidekiqHerokuScaler project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/sidekiq_heroku_scaler/blob/master/CODE_OF_CONDUCT.md).

@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.email         = ['vital.ryabchinskiy@gmail.com']
 
   spec.summary       = 'Sidekiq Heroku Scaler'
-  spec.description   = 'Tool to scale sidekiq instances on Heroku'
+  spec.description   = 'Tool to scale sidekiq dynos on Heroku'
   spec.homepage      = 'https://github.com/vitalinfo/sidekiq-heroku-scaler'
   spec.license       = 'MIT'
 
@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rubocop'
 
-  spec.add_dependency 'platform-api'
-  spec.add_dependency 'sidekiq'
+  spec.add_dependency 'platform-api', '~> 2.2'
+  spec.add_dependency 'sidekiq', '~> 5.2'
 end

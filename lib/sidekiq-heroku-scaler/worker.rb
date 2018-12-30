@@ -1,14 +1,9 @@
 # frozen_string_literal: true
 
-require 'forwardable'
 require 'sidekiq'
 
 module SidekiqHerokuScaler
   class Worker
-    extend Forwardable
-
-    def_delegators :formation, :quantity
-
     def initialize(worker_name, formation)
       @worker_name = worker_name
       @formation = formation
@@ -20,6 +15,10 @@ module SidekiqHerokuScaler
 
     def formation_id
       formation.id
+    end
+
+    def quantity
+      formation.quantity
     end
 
     def latency

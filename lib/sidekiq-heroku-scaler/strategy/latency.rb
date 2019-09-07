@@ -7,13 +7,13 @@ module SidekiqHerokuScaler
 
       def initialize(min_dynos_count:, max_dynos_count:,
                      max_latency:, min_latency:,
-                     inc_count: 1, dec_count: 1)
+                     inc_count: nil, dec_count: nil)
         @min_dynos_count = min_dynos_count
         @max_dynos_count = max_dynos_count
         @max_latency = max_latency
         @min_latency = min_latency
-        @inc_count = inc_count
-        @dec_count = dec_count
+        @inc_count = inc_count || 1
+        @dec_count = dec_count || 1
       end
 
       def increase?(sidekiq_worker)

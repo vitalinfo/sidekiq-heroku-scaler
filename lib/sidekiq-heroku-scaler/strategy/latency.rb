@@ -12,8 +12,8 @@ module SidekiqHerokuScaler
         @max_dynos_count = max_dynos_count
         @max_latency = max_latency
         @min_latency = min_latency
-        @inc_count = inc_count || 1
-        @dec_count = dec_count || 1
+        @inc_count = (inc_count || 1).to_i
+        @dec_count = (dec_count || 1).to_i
       end
 
       def increase?(sidekiq_worker)

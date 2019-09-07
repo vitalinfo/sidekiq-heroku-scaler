@@ -3,11 +3,17 @@
 module SidekiqHerokuScaler
   module Strategy
     class Latency
-      def initialize(min_dynos_count:, max_dynos_count:, max_latency:, min_latency:)
+      attr_reader :inc_count, :dec_count
+
+      def initialize(min_dynos_count:, max_dynos_count:,
+                     max_latency:, min_latency:,
+                     inc_count: 1, dec_count: 1)
         @min_dynos_count = min_dynos_count
         @max_dynos_count = max_dynos_count
         @max_latency = max_latency
         @min_latency = min_latency
+        @inc_count = inc_count
+        @dec_count = dec_count
       end
 
       def increase?(sidekiq_worker)

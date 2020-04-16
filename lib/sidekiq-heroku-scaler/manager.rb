@@ -30,9 +30,11 @@ module SidekiqHerokuScaler
 
     def process_formation(sidekiq_worker)
       if strategy.increase?(sidekiq_worker)
-        heroku_client.update_formation(sidekiq_worker.formation_id, sidekiq_worker.quantity + strategy.inc_count)
+        heroku_client.update_formation(sidekiq_worker.formation_id,
+                                       strategy.safe_quantity(sidekiq_worker.quantity + strategy.inc_count))
       elsif strategy.decrease?(sidekiq_worker)
-        heroku_client.update_formation(sidekiq_worker.formation_id, sidekiq_worker.quantity - strategy.dec_count)
+        heroku_client.update_formation(sidekiq_worker.formation_id,
+                                       strategy.safe_quantity(sidekiq_worker.quantity - strategy.dec_count))
       end
     end
 

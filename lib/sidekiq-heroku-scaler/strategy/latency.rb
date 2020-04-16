@@ -26,6 +26,12 @@ module SidekiqHerokuScaler
         sidekiq_worker.latency < min_latency && sidekiq_worker.quantity > min_dynos_count
       end
 
+      def safe_quantity(quantity)
+        return 1 if quantity <= 0
+
+        quantity > max_dynos_count ? max_dynos_count : quantity
+      end
+
       private
 
       attr_reader :min_dynos_count, :max_dynos_count, :max_latency, :min_latency

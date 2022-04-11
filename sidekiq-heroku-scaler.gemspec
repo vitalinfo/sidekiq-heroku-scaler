@@ -27,6 +27,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'rubocop'
 
-  spec.add_dependency 'platform-api', '~> 2.2'
+  spec.add_dependency 'platform-api', '> 3', '< 4'
   spec.add_dependency 'sidekiq', '> 4', '< 7'
 end

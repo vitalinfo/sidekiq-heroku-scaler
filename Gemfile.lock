@@ -30,7 +30,7 @@ GEM
       moneta (~> 1.0.0)
       rate_throttle_client (~> 0.1.0)
     powerpack (0.1.2)
-    rack (2.2.3)
+    rack (2.2.3.1)
     rainbow (3.0.0)
     rake (12.3.2)
     rate_throttle_client (0.1.2)

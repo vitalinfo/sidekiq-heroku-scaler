@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
-require 'sidekiq_heroku_scaler/heroku/client'
-require 'sidekiq_heroku_scaler/worker'
+require 'sidekiq-heroku-scaler/heroku/client'
+require 'sidekiq-heroku-scaler/worker'
 
 module SidekiqHerokuScaler
   class Manager

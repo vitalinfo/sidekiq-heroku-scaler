@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'platform-api'
-require 'sidekiq-heroku-scaler/heroku/formation'
+require 'sidekiq_heroku_scaler/heroku/formation'
 
 module SidekiqHerokuScaler
   module Heroku
@@ -22,10 +22,8 @@ module SidekiqHerokuScaler
       end
 
       def sidekiq_workers
-        @sidekiq_workers ||= begin
-          formations.select { |formation| formation['command'].match(/sidekiq/) }
-                    .map { |formation| formation['type'] }
-        end
+        @sidekiq_workers ||= formations.select { |formation| formation['command'].match(/sidekiq/) }
+                                       .map { |formation| formation['type'] }
       end
 
       def update_formation(formation_id, quantity)

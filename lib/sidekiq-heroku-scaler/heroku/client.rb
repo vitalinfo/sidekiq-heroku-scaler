@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'platform-api'
-require 'sidekiq_heroku_scaler/heroku/formation'
+require 'sidekiq-heroku-scaler/heroku/formation'
 
 module SidekiqHerokuScaler
   module Heroku

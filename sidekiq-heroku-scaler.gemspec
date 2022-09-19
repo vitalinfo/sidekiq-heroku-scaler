@@ -2,7 +2,7 @@
 
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'sidekiq_heroku_scaler/version'
+require 'sidekiq-heroku-scaler/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'sidekiq-heroku-scaler'

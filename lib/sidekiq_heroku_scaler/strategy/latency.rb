@@ -27,7 +27,7 @@ module SidekiqHerokuScaler
       end
 
       def safe_quantity(quantity)
-        return 1 if quantity <= 0
+        return min_dynos_count if quantity < min_dynos_count
 
         quantity > max_dynos_count ? max_dynos_count : quantity
       end

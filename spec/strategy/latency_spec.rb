@@ -1,9 +1,11 @@
 # frozen_string_literal: true
 
 RSpec.describe SidekiqHerokuScaler::Strategy::Latency do
-  subject { described_class.new(min_dynos_count: 1, max_dynos_count: max_dynos_count,
-                                max_latency: 60, min_latency: 30,
-                                inc_count: 2, dec_count: 2) }
+  subject do
+    described_class.new(min_dynos_count: 1, max_dynos_count: max_dynos_count,
+                        max_latency: 60, min_latency: 30,
+                        inc_count: 2, dec_count: 2)
+  end
 
   let(:max_dynos_count) { 10 }
 
@@ -26,7 +28,6 @@ RSpec.describe SidekiqHerokuScaler::Strategy::Latency do
       it do
         expect(subject.safe_quantity(quantity)).to eq quantity
       end
-
     end
   end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
-require 'sidekiq-heroku-scaler'
+require 'sidekiq_heroku_scaler'
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

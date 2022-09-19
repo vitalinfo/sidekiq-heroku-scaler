@@ -2,7 +2,7 @@
 
 lib = File.expand_path('lib', __dir__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
-require 'sidekiq-heroku-scaler/version'
+require 'sidekiq_heroku_scaler/version'
 
 Gem::Specification.new do |spec|
   spec.name          = 'sidekiq-heroku-scaler'
@@ -29,4 +29,5 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'platform-api', '> 3', '< 4'
   spec.add_dependency 'sidekiq', '> 4', '< 7'
+  spec.metadata['rubygems_mfa_required'] = 'true'
 end

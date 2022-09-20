@@ -7,17 +7,17 @@ require 'sidekiq'
 
 module SidekiqHerokuScaler
   class SidekiqConfig
-    def initialize(command = [])
-      @command = command
+    def initialize(commands = [])
+      @commands = commands
     end
 
     def config
-      @config ||= ActiveSupport::HashWithIndifferentAccess.new(setup_options(command))
+      @config ||= ActiveSupport::HashWithIndifferentAccess.new(setup_options(commands))
     end
 
     private
 
-    attr_reader :command
+    attr_reader :commands
 
     def load_yaml(src)
       if Psych::VERSION > '4.0'

@@ -22,6 +22,10 @@ module SidekiqHerokuScaler
       formation.quantity
     end
 
+    def jobs_running?
+      Sidekiq::Workers.new.any? {|_process_id, _thread_id, work| queues.include?(work['queue']) }
+    end
+
     def latency
       queues.sum { |queue| Sidekiq::Queue.new(queue).latency }
     end

@@ -2,6 +2,7 @@
 
 require 'sidekiq-heroku-scaler/strategy/latency'
 require 'sidekiq-heroku-scaler/manager'
+require 'sidekiq-heroku-scaler/sidekiq_config'
 require 'sidekiq-heroku-scaler/version'
 
 module SidekiqHerokuScaler

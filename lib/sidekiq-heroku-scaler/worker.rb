@@ -39,7 +39,7 @@ module SidekiqHerokuScaler
 
     def build_process
       command = formation.command.gsub(/.*sidekiq(\s|\z)/, '').split
-      sideki_config = SidekiqHerokuScaler::SidekiqConfig(command)
+      sideki_config = SidekiqHerokuScaler::SidekiqConfig.new(command)
       Sidekiq::Process.new(sideki_config.config)
     end
 

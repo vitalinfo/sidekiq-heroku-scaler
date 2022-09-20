@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 require 'sidekiq'
-require 'sidekiq/cli'
+require 'sidekiq-heroku-scaler/sidekiq_config'
 
 module SidekiqHerokuScaler
   class Worker
@@ -23,7 +23,7 @@ module SidekiqHerokuScaler
     end
 
     def jobs_running?
-      Sidekiq::Workers.new.any? {|_process_id, _thread_id, work| queues.include?(work['queue']) }
+      Sidekiq::Workers.new.any? { |_process_id, _thread_id, work| queues.include?(work['queue']) }
     end
 
     def latency
@@ -40,8 +40,8 @@ module SidekiqHerokuScaler
 
     def build_process
       command = formation.command.gsub(/.*sidekiq(\s|\z)/, '').split
-      config = Sidekiq::CLI.instance.send(:setup_options, command)
-      Sidekiq::Process.new(ActiveSupport::HashWithIndifferentAccess.new(config))
+      sideki_config = SidekiqHerokuScaler::SidekiqConfig.new(command)
+      Sidekiq::Process.new(sideki_config.config)
     end
 
     def queues

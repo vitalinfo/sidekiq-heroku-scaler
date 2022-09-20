@@ -17,7 +17,7 @@ module SidekiqHerokuScaler
 
       def formation_for(worker_name)
         SidekiqHerokuScaler::Heroku::Formation.new(
-          formations.detect { |formation| formation['type'] == worker_name } || {}
+          formations.detect { |formation| formation['type'] == worker_name.to_s } || {}
         )
       end
 

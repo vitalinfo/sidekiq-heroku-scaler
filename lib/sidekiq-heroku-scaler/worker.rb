@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 require 'sidekiq'
+require 'sidekiq-heroku-scaler/sidekiq_config'
 
 module SidekiqHerokuScaler
   class Worker

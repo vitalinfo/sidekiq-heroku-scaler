@@ -18,13 +18,14 @@ module SidekiqHerokuScaler
 
       def increase?(sidekiq_worker)
         sidekiq_worker.quantity < max_dynos_count &&
-          sidekiq_worker.latency > max_latency &&
+          (sidekiq_worker.latency > max_latency ||
+            (sidekiq_worker.quantity.zero? && sidekiq_worker.latency.positive?)) &&
           sidekiq_worker.queues_size > sidekiq_worker.quantity * sidekiq_worker.concurrency
       end
 
       def decrease?(sidekiq_worker)
-        sidekiq_worker.latency < min_latency &&
-          sidekiq_worker.quantity > min_dynos_count &&
+        sidekiq_worker.quantity > min_dynos_count &&
+          sidekiq_worker.latency < min_latency &&
           (sidekiq_worker.quantity > 1 || !sidekiq_worker.jobs_running?)
       end
 

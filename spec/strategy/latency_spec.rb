@@ -2,12 +2,14 @@
 
 RSpec.describe SidekiqHerokuScaler::Strategy::Latency do
   subject do
-    described_class.new(min_dynos_count: min_dynos_count, max_dynos_count: max_dynos_count,
+    described_class.new(min_dynos_count:, max_dynos_count:,
                         max_latency: 60, min_latency: 30,
-                        inc_count: 2, dec_count: 2)
+                        inc_count:, dec_count:)
   end
 
   let(:max_dynos_count) { 10 }
+  let(:inc_count) { 2 }
+  let(:dec_count) { 2 }
 
   context '#safe_quantity' do
     0.upto(1) do |count|
@@ -35,5 +37,27 @@ RSpec.describe SidekiqHerokuScaler::Strategy::Latency do
         end
       end
     end
+  end
+
+  context '#decrease?' do
+    context 'when min_dynos_count is zero' do
+      let(:max_dynos_count) { 2 }
+      let(:min_dynos_count) { 0 }
+
+      context 'when quantity equal to dec_count and has only a processing jobs' do
+        let(:sidekiq_worker) { OpenStruct.new(quantity: dec_count, latency: 0, 'jobs_running?': true) }
+
+        it { expect(subject.decrease?(sidekiq_worker)).to be_falsey }
+      end
+
+      context 'when quantity bigger than dec_count and has only a processing jobs' do
+        let(:sidekiq_worker) { OpenStruct.new(quantity: dec_count + 1, latency: 0, 'jobs_running?': true) }
+        let(:dec_count) { 1 }
+
+        it { expect(subject.decrease?(sidekiq_worker)).to be_truthy }
+      end
+    end
+
+    pending 'add more'
   end
 end

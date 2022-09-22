@@ -26,7 +26,8 @@ module SidekiqHerokuScaler
       def decrease?(sidekiq_worker)
         sidekiq_worker.quantity > min_dynos_count &&
           sidekiq_worker.latency < min_latency &&
-          (sidekiq_worker.quantity > 1 || !sidekiq_worker.jobs_running?)
+          (sidekiq_worker.quantity > 1 || !sidekiq_worker.jobs_running?) &&
+          (!sidekiq_worker.jobs_running? || safe_quantity(sidekiq_worker.quantity - dec_count).positive?)
       end
 
       def safe_quantity(quantity)

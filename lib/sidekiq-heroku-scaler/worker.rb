@@ -5,6 +5,8 @@ require 'sidekiq-heroku-scaler/sidekiq_config'
 
 module SidekiqHerokuScaler
   class Worker
+    attr_reader :worker_name
+
     def initialize(worker_name, formation)
       @worker_name = worker_name
       @formation = formation
@@ -36,7 +38,7 @@ module SidekiqHerokuScaler
 
     private
 
-    attr_reader :formation, :worker_name
+    attr_reader :formation
 
     def build_process
       command = formation.command.gsub(/.*sidekiq(\s|\z)/, '').split

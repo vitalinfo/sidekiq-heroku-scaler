@@ -27,7 +27,7 @@ module SidekiqHerokuScaler
       end
     end
 
-    def option_parser(opts)
+    def option_parser(opts) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength
       OptionParser.new do |o|
         o.on '-c', '--concurrency INT', 'processor threads to use' do |arg|
           opts[:concurrency] = Integer(arg)
@@ -52,7 +52,7 @@ module SidekiqHerokuScaler
       end
     end
 
-    def parse_config(path)
+    def parse_config(path) # rubocop:disable Metrics/MethodLength
       erb = ERB.new(File.read(path))
       erb.filename = File.expand_path(path)
       opts = load_yaml(erb.result) || {}
@@ -90,7 +90,7 @@ module SidekiqHerokuScaler
       opts
     end
 
-    def setup_options(args)
+    def setup_options(args) # rubocop:disable Metrics/AbcSize, Metrics/MethodLength, Metrics/CyclomaticComplexity, Metrics/PerceivedComplexity
       # parse CLI options
       opts = parse_options(args)
 

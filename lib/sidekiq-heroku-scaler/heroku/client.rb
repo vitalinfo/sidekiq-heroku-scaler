@@ -22,7 +22,7 @@ module SidekiqHerokuScaler
       end
 
       def sidekiq_workers
-        @sidekiq_workers ||= formations.select { |formation| formation['command'].match(/sidekiq/) }
+        @sidekiq_workers ||= formations.select { |formation| formation['command'].include?('sidekiq') }
                                        .map { |formation| formation['type'] }
       end
 

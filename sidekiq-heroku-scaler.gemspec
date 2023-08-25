@@ -22,10 +22,7 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ['lib']
 
-  spec.add_development_dependency 'bundler'
-  spec.add_development_dependency 'rake'
-  spec.add_development_dependency 'rspec'
-  spec.add_development_dependency 'rubocop'
+  spec.required_ruby_version = '>= 3.0.0'
 
   spec.add_dependency 'activesupport', '> 5', '< 8'
   spec.add_dependency 'platform-api', '> 3', '< 4'

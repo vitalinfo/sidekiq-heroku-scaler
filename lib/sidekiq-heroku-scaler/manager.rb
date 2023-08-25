@@ -12,12 +12,18 @@ module SidekiqHerokuScaler
     end
 
     def perform
-      autoscalable_workers.each(&method(:autoscale_one))
+      autoscalable_workers.each do |worker_name|
+        autoscale_one(worker_name)
+      end
     end
 
     private
 
     attr_reader :heroku_client, :strategy, :workers
+
+    def autoscalable_workers
+      heroku_client.sidekiq_workers & workers
+    end
 
     def autoscale_one(worker_name)
       formation = heroku_client.formation_for(worker_name)
@@ -28,18 +34,26 @@ module SidekiqHerokuScaler
       process_formation(sidekiq_worker)
     end
 
-    def process_formation(sidekiq_worker)
+    def process_formation(sidekiq_worker) # rubocop:disable Metrics/AbcSize
       if strategy.increase?(sidekiq_worker)
-        heroku_client.update_formation(sidekiq_worker.formation_id,
-                                       strategy.safe_quantity(sidekiq_worker.quantity + strategy.inc_count))
+        start_sidekiq_workers(sidekiq_worker, strategy.safe_quantity(sidekiq_worker.quantity + strategy.inc_count))
       elsif strategy.decrease?(sidekiq_worker)
-        heroku_client.update_formation(sidekiq_worker.formation_id,
-                                       strategy.safe_quantity(sidekiq_worker.quantity - strategy.dec_count))
+        stop_sidekiq_workers(sidekiq_worker, strategy.safe_quantity(sidekiq_worker.quantity - strategy.dec_count))
       end
     end
 
-    def autoscalable_workers
-      heroku_client.sidekiq_workers & workers
+    def start_sidekiq_workers(sidekiq_worker, count)
+      heroku_client.update_formation(sidekiq_worker.formation_id, count)
+    end
+
+    def stop_sidekiq_workers(sidekiq_worker, count)
+      processes = Sidekiq::ProcessSet.new.select do |process|
+        process['busy'].zero? &&
+          process['quiet'] == 'false' &&
+          process['hostname'].match?(/\A#{sidekiq_worker.worker_name}\./)
+      end
+
+      processes.first(count).each(&:stop!)
     end
   end
 end

@@ -36,6 +36,10 @@ module SidekiqHerokuScaler
       queues.sum { |queue| Sidekiq::Queue.new(queue).size }
     end
 
+    def processes
+      @processes ||= Sidekiq::ProcessSet.new.select { |process| process.identity.match?(/\A#{worker_name}\./) }
+    end
+
     private
 
     attr_reader :formation
@@ -50,12 +54,8 @@ module SidekiqHerokuScaler
       process['queues'] || []
     end
 
-    def process_set
-      @process_set ||= Sidekiq::ProcessSet.new
-    end
-
     def process
-      @process ||= process_set.detect { |p| p.identity.match(/\A#{worker_name}\./) } || build_process
+      @process ||= processes.first || build_process
     end
   end
 end

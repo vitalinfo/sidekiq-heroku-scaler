@@ -3,18 +3,20 @@
 module SidekiqHerokuScaler
   module Strategy
     class Latency
-      attr_reader :inc_count, :dec_count
+      attr_reader :inc_count, :dec_count, :smart_decrease
 
       # rubocop:disable Metrics/ParameterLists
       def initialize(min_dynos_count:, max_dynos_count:,
                      max_latency:, min_latency:,
-                     inc_count: nil, dec_count: nil)
+                     inc_count: nil, dec_count: nil,
+                     smart_decrease: false)
         @min_dynos_count = min_dynos_count
         @max_dynos_count = max_dynos_count
         @max_latency = max_latency
         @min_latency = min_latency
         @inc_count = (inc_count || 1).to_i
         @dec_count = (dec_count || 1).to_i
+        @smart_decrease = smart_decrease
       end
       # rubocop:enable Metrics/ParameterLists
 

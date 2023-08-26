@@ -34,26 +34,33 @@ module SidekiqHerokuScaler
       process_formation(sidekiq_worker)
     end
 
-    def process_formation(sidekiq_worker) # rubocop:disable Metrics/AbcSize
+    def decrease_delta_for(sidekiq_worker, delta)
+      return delta unless strategy.smart_decrease
+
+      processes = sidekiq_worker.processes.reverse.take_while do |process|
+        process['busy'].zero? && process['quiet'] == 'false'
+      end
+
+      processes.size < delta.abs ? -processes.size : delta
+    end
+
+    def process_formation(sidekiq_worker)
       if strategy.increase?(sidekiq_worker)
-        start_sidekiq_workers(sidekiq_worker, strategy.safe_quantity(sidekiq_worker.quantity + strategy.inc_count))
+        update_formation(sidekiq_worker, strategy.inc_count)
       elsif strategy.decrease?(sidekiq_worker)
-        stop_sidekiq_workers(sidekiq_worker, strategy.safe_quantity(sidekiq_worker.quantity - strategy.dec_count))
+        stop_sidekiq_workers(sidekiq_worker, strategy.dec_count)
       end
     end
 
-    def start_sidekiq_workers(sidekiq_worker, count)
-      heroku_client.update_formation(sidekiq_worker.formation_id, count)
+    def stop_sidekiq_workers(sidekiq_worker, delta)
+      delta = decrease_delta_for(sidekiq_worker, delta)
+
+      update_formation(sidekiq_worker, delta)
     end
 
-    def stop_sidekiq_workers(sidekiq_worker, count)
-      processes = Sidekiq::ProcessSet.new.select do |process|
-        process['busy'].zero? &&
-          process['quiet'] == 'false' &&
-          process['hostname'].match?(/\A#{sidekiq_worker.worker_name}\./)
-      end
-
-      processes.first(count).each(&:stop!)
+    def update_formation(sidekiq_worker, delta)
+      heroku_client.update_formation(sidekiq_worker.formation_id,
+                                     strategy.safe_quantity(sidekiq_worker.quantity + delta))
     end
   end
 end

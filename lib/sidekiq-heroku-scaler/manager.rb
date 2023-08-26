@@ -48,7 +48,7 @@ module SidekiqHerokuScaler
       if strategy.increase?(sidekiq_worker)
         update_formation(sidekiq_worker, strategy.inc_count)
       elsif strategy.decrease?(sidekiq_worker)
-        stop_sidekiq_workers(sidekiq_worker, strategy.dec_count)
+        stop_sidekiq_workers(sidekiq_worker, -strategy.dec_count)
       end
     end
 

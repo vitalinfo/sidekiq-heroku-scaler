@@ -3,24 +3,27 @@
 module SidekiqHerokuScaler
   module Strategy
     class Latency
-      attr_reader :inc_count, :dec_count
+      attr_reader :inc_count, :dec_count, :smart_decrease
 
+      # rubocop:disable Metrics/ParameterLists
       def initialize(min_dynos_count:, max_dynos_count:,
                      max_latency:, min_latency:,
-                     inc_count: nil, dec_count: nil)
+                     inc_count: nil, dec_count: nil,
+                     smart_decrease: false)
         @min_dynos_count = min_dynos_count
         @max_dynos_count = max_dynos_count
         @max_latency = max_latency
         @min_latency = min_latency
         @inc_count = (inc_count || 1).to_i
         @dec_count = (dec_count || 1).to_i
+        @smart_decrease = smart_decrease
       end
+      # rubocop:enable Metrics/ParameterLists
 
       def increase?(sidekiq_worker)
         sidekiq_worker.quantity < max_dynos_count &&
           (sidekiq_worker.latency > max_latency ||
-            (sidekiq_worker.quantity.zero? && sidekiq_worker.latency.positive?)) &&
-          sidekiq_worker.queues_size > sidekiq_worker.quantity * sidekiq_worker.concurrency
+            (sidekiq_worker.quantity.zero? && sidekiq_worker.latency.positive?))
       end
 
       def decrease?(sidekiq_worker)
@@ -33,7 +36,7 @@ module SidekiqHerokuScaler
       def safe_quantity(quantity)
         return min_dynos_count if quantity < min_dynos_count
 
-        quantity > max_dynos_count ? max_dynos_count : quantity
+        [quantity, max_dynos_count].min
       end
 
       private

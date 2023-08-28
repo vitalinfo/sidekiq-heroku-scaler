@@ -1,9 +1,23 @@
+require:
+  - rubocop-performance
+  - rubocop-rake
+  - rubocop-rspec
+  - rubocop-factory_bot
 AllCops:
   NewCops: enable
-  TargetRubyVersion: 2.7
+  TargetRubyVersion: 3.0
   Exclude:
     - 'bin/*'
-Documentation:
-  Enabled: false
-Metrics/LineLength:
+Layout/LineLength:
   Max: 120
+Style/Documentation:
+  Enabled: false
+Style/OpenStructUse:
+  Enabled: false
+Naming/FileName:
+  Exclude:
+    - 'lib/sidekiq-heroku-scaler.rb'
+RSpec/NamedSubject:
+  Enabled: false
+RSpec/NestedGroups:
+  Max: 8

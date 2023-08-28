@@ -5,6 +5,8 @@ require 'sidekiq-heroku-scaler/sidekiq_config'
 
 module SidekiqHerokuScaler
   class Worker
+    attr_reader :worker_name
+
     def initialize(worker_name, formation)
       @worker_name = worker_name
       @formation = formation
@@ -34,9 +36,13 @@ module SidekiqHerokuScaler
       queues.sum { |queue| Sidekiq::Queue.new(queue).size }
     end
 
+    def processes
+      @processes ||= Sidekiq::ProcessSet.new.select { |process| process.identity.match?(/\A#{worker_name}\./) }
+    end
+
     private
 
-    attr_reader :formation, :worker_name
+    attr_reader :formation
 
     def build_process
       command = formation.command.gsub(/.*sidekiq(\s|\z)/, '').split
@@ -48,12 +54,8 @@ module SidekiqHerokuScaler
       process['queues'] || []
     end
 
-    def process_set
-      @process_set ||= Sidekiq::ProcessSet.new
-    end
-
     def process
-      @process ||= process_set.detect { |p| p.identity.match(/\A#{worker_name}\./) } || build_process
+      @process ||= processes.first || build_process
     end
   end
 end

@@ -30,7 +30,8 @@ scale_strategy = SidekiqHerokuScaler::Strategy::Latency.new(
   max_latency: 5.minutes.to_i,
   min_latency: 1.minute.to_i,
   inc_count: 2, # default 1
-  dec_count: 2 # default 1
+  dec_count: 2, # default 1
+  smart_decrease: true # default false
 )
 ```
 or

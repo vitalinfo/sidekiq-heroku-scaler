@@ -1,6 +1,6 @@
 # SidekiqHerokuScaler
 
-Tool to autoscale sidekiq dynos on Heroku. 
+Autoscale sidekiq dynos tool on Heroku. 
 
 ## Installation
 

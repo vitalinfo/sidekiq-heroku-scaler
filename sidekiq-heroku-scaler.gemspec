@@ -26,6 +26,6 @@ Gem::Specification.new do |spec|
 
   spec.add_dependency 'activesupport', '> 5', '< 9'
   spec.add_dependency 'platform-api', '> 3', '< 4'
-  spec.add_dependency 'sidekiq', '> 4', '< 8'
+  spec.add_dependency 'sidekiq', '> 4', '< 9'
   spec.metadata['rubygems_mfa_required'] = 'true'
 end

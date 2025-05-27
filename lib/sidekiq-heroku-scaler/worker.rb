@@ -25,7 +25,7 @@ module SidekiqHerokuScaler
     end
 
     def jobs_running?
-      Sidekiq::Workers.new.any? { |_process_id, _thread_id, work| queues.include?(work['queue']) }
+      Sidekiq::Workers.new.any? { |_process_id, _thread_id, work| queues.include?(work.queue) }
     end
 
     def latency

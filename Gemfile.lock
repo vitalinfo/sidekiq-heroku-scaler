@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    sidekiq-heroku-scaler (0.7.0)
+    sidekiq-heroku-scaler (0.8.0)
       activesupport (> 5, < 9)
       platform-api (> 3, < 4)
       sidekiq (> 4, < 9)

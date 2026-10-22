@@ -1,8 +1,7 @@
-require:
+plugins:
   - rubocop-performance
   - rubocop-rake
   - rubocop-rspec
-  - rubocop-factory_bot
 AllCops:
   NewCops: enable
   TargetRubyVersion: 3.0
@@ -11,8 +10,6 @@ AllCops:
 Layout/LineLength:
   Max: 120
 Style/Documentation:
-  Enabled: false
-Style/OpenStructUse:
   Enabled: false
 Naming/FileName:
   Exclude:

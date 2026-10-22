@@ -5,8 +5,7 @@ module SidekiqHerokuScaler
     class Latency
       attr_reader :inc_count, :dec_count, :smart_decrease
 
-      # rubocop:disable Metrics/ParameterLists
-      def initialize(min_dynos_count:, max_dynos_count:,
+      def initialize(min_dynos_count:, max_dynos_count:, # rubocop:disable Metrics/ParameterLists
                      max_latency:, min_latency:,
                      inc_count: nil, dec_count: nil,
                      smart_decrease: false)
@@ -18,7 +17,6 @@ module SidekiqHerokuScaler
         @dec_count = (dec_count || 1).to_i
         @smart_decrease = smart_decrease
       end
-      # rubocop:enable Metrics/ParameterLists
 
       def increase?(sidekiq_worker)
         sidekiq_worker.quantity < max_dynos_count &&

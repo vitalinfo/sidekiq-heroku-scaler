@@ -45,13 +45,17 @@ RSpec.describe SidekiqHerokuScaler::Strategy::Latency do
       let(:min_dynos_count) { 0 }
 
       context 'when quantity equal to dec_count and has only a processing jobs' do
-        let(:sidekiq_worker) { OpenStruct.new(quantity: dec_count, latency: 0, jobs_running?: true) }
+        let(:sidekiq_worker) do
+          instance_double(SidekiqHerokuScaler::Worker, quantity: dec_count, latency: 0, jobs_running?: true)
+        end
 
         it { expect(subject).not_to be_decrease(sidekiq_worker) }
       end
 
       context 'when quantity bigger than dec_count and has only a processing jobs' do
-        let(:sidekiq_worker) { OpenStruct.new(quantity: dec_count + 1, latency: 0, jobs_running?: true) }
+        let(:sidekiq_worker) do
+          instance_double(SidekiqHerokuScaler::Worker, quantity: dec_count + 1, latency: 0, jobs_running?: true)
+        end
         let(:dec_count) { 1 }
 
         it { expect(subject).to be_decrease(sidekiq_worker) }

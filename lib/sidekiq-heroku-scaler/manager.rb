@@ -27,7 +27,7 @@ module SidekiqHerokuScaler
 
     def autoscale_one(worker_name)
       formation = heroku_client.formation_for(worker_name)
-      return if formation.blank?
+      return if formation.nil?
 
       sidekiq_worker = SidekiqHerokuScaler::Worker.new(worker_name, formation)
 

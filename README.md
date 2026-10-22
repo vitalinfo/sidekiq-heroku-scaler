@@ -102,6 +102,15 @@ module Scheduling
 end    
 ```
 
+## Development
+
+Run specs and RuboCop in Docker:
+
+    $ docker compose run --rm gem bundle exec rspec
+    $ docker compose run --rm gem bundle exec rubocop
+
+Another Ruby: `docker compose build --build-arg RUBY_VERSION=3.4`.
+
 ## TODO
 
 - Lack of specs

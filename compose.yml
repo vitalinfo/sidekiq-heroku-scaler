@@ -1,0 +1,9 @@
+services:
+  gem:
+    build: .
+    volumes:
+      - .:/gem
+      - bundle:/usr/local/bundle
+
+volumes:
+  bundle:

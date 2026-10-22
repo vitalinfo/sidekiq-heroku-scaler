@@ -1,10 +1,7 @@
 # frozen_string_literal: true
 
-require 'ostruct'
-
 module SidekiqHerokuScaler
   module Heroku
-    class Formation < OpenStruct
-    end
+    Formation = Struct.new(:id, :quantity, :command, keyword_init: true)
   end
 end

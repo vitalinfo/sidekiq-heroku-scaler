@@ -16,5 +16,7 @@ Naming/FileName:
     - 'lib/sidekiq-heroku-scaler.rb'
 RSpec/NamedSubject:
   Enabled: false
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
 RSpec/NestedGroups:
   Max: 8

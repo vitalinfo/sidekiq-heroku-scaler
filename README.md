@@ -31,7 +31,9 @@ scale_strategy = SidekiqHerokuScaler::Strategy::Latency.new(
   min_latency: 1.minute.to_i,
   inc_count: 2, # default 1
   dec_count: 2, # default 1
-  smart_decrease: true # default false
+  smart_decrease: true, # default false
+  max_queue_size: 2_500, # default nil, scale up when more jobs are waiting, before latency grows
+  cooldown: 10.minutes.to_i # default nil, don't scale down while a process started less than this ago
 )
 ```
 or

@@ -37,11 +37,21 @@ module SidekiqHerokuScaler
     def decrease_delta_for(sidekiq_worker, delta)
       return delta unless strategy.smart_decrease
 
-      processes = sidekiq_worker.processes.reverse.take_while do |process|
-        process['busy'].zero? && process['quiet'] == 'false'
-      end
+      -[delta.abs, idle_dynos_count(sidekiq_worker)].min
+    end
 
-      processes.size < delta.abs ? -processes.size : delta
+    # Heroku removes the highest-numbered dynos first, and a dyno runs several Sidekiq processes,
+    # so count whole idle dynos from the top rather than idle processes.
+    def idle_dynos_count(sidekiq_worker)
+      sidekiq_worker.processes
+                    .group_by { |process| process['hostname'] }
+                    .sort_by { |hostname, _| -hostname.to_s.split('.').last.to_i }
+                    .take_while { |_, processes| processes.all? { |process| idle?(process) } }
+                    .size
+    end
+
+    def idle?(process)
+      process['busy'].zero? && process['quiet'] == 'false'
     end
 
     def process_formation(sidekiq_worker)
